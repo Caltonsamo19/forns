@@ -15,7 +15,7 @@ const GOOGLE_SHEETS_CONFIG_ATACADO = {
     scriptUrl: process.env.GOOGLE_SHEETS_SCRIPT_URL_ATACADO || 'https://script.google.com/macros/s/AKfycbzdvM-IrH4a6gS53WZ0J-AGXY0duHfgv15DyxdqUm1BLEm3Z15T67qgstu6yPTedgOSCA/exec',
     planilhaUrl: 'https://docs.google.com/spreadsheets/d/1ivc8gHD5WBWsvcwmK2dLBWpEHCI9J0C17Kog2NesuuE/edit',
     planilhaId: '1ivc8gHD5WBWsvcwmK2dLBWpEHCI9J0C17Kog2NesuuE',
-    timeout: 30000,
+    timeout: 60000,
     retryAttempts: 3,
     retryDelay: 2000
 };
@@ -25,7 +25,7 @@ const GOOGLE_SHEETS_CONFIG_SALDO = {
     scriptUrl: process.env.GOOGLE_SHEETS_SCRIPT_URL_SALDO || 'https://script.google.com/macros/s/AKfycby9UrgOSXkCnAKt4Csd3IPG6pr8i9jmgycrBy_cvsOT7x8eY0-EmJOmooSvw3eRuvF2tQ/exec',
     planilhaUrl: 'https://docs.google.com/spreadsheets/d/1fIE-bODZOF0oyUY-y5oUGL2g_LYzwoKdjdwc3bGo8hQ/edit',
     planilhaId: '1fIE-bODZOF0oyUY-y5oUGL2g_LYzwoKdjdwc3bGo8hQ',
-    timeout: 30000,
+    timeout: 60000,
     retryAttempts: 3,
     retryDelay: 2000
 };
@@ -33,7 +33,7 @@ const GOOGLE_SHEETS_CONFIG_SALDO = {
 // === CONFIGURAÇÃO GOOGLE SHEETS - BOT RETALHO (mantida para compatibilidade) ===
 const GOOGLE_SHEETS_CONFIG = {
     scriptUrl: process.env.GOOGLE_SHEETS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbz.../exec',
-    timeout: 30000,
+    timeout: 60000,
     retryAttempts: 3,
     retryDelay: 2000,
     planilhaId: process.env.GOOGLE_SHEETS_ID || '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
@@ -564,7 +564,7 @@ async function verificarPagamentoIndividual(referencia, valorEsperado) {
             referencia: referencia,
             valor: valorNormalizado
         }, {
-            timeout: 30000,
+            timeout: 60000,
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -601,7 +601,7 @@ async function marcarPagamentoComoProcessado(referencia, valorEsperado) {
             referencia: referencia,
             valor: valorNormalizado
         }, {
-            timeout: 30000,
+            timeout: 60000,
             headers: {
                 'Content-Type': 'application/json'
             }
