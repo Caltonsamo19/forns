@@ -194,6 +194,40 @@ const CONFIGURACAO_GRUPOS_DIVISAO = {
             500: 450,    // 500MT saldo = 450MT pagamento
             1000: 900    // 1000MT saldo = 900MT pagamento
         }
+    },
+    '120363422334163033@g.us': {
+        nome: 'Data Store - Fornecedores',
+        precos: {
+            10240: 125,    // 10GB = 125MT
+            20480: 250,    // 20GB = 250MT
+            30720: 375,    // 30GB = 375MT
+            40960: 500,    // 40GB = 500MT
+            51200: 625,    // 50GB = 625MT
+            61440: 750,    // 60GB = 750MT
+            71680: 875,    // 70GB = 875MT
+            81920: 1000,   // 80GB = 1000MT
+            92160: 1125,   // 90GB = 1125MT
+            102400: 1250   // 100GB = 1250MT
+        },
+        // === TABELA DE SALDO DATA STORE ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 815,   // 1000MT saldo = 815MT pagamento
+            2000: 1630,  // 2000MT saldo = 1630MT pagamento
+            3000: 2445,  // 3000MT saldo = 2445MT pagamento
+            4000: 3260,  // 4000MT saldo = 3260MT pagamento
+            5000: 4075,  // 5000MT saldo = 4075MT pagamento
+            6000: 4890,  // 6000MT saldo = 4890MT pagamento
+            7000: 5705,  // 7000MT saldo = 5705MT pagamento
+            8000: 6520,  // 8000MT saldo = 6520MT pagamento
+            9000: 7335,  // 9000MT saldo = 7335MT pagamento
+            10000: 8150  // 10000MT saldo = 8150MT pagamento
+        }
     }
     // Only Saldo foi removido pois não precisa de divisão automática
 };
@@ -391,6 +425,96 @@ NOME: Vasco José Mahumane
 💰 300MT saldo = 270MT pagamento
 💰 500MT saldo = 450MT pagamento
 💰 1000MT saldo = 900MT pagamento`
+    },
+    '120363422334163033@g.us': {
+        nome: 'Data Store - Fornecedores',
+        precos: {
+            10240: 125,    // 10GB = 125MT
+            20480: 250,    // 20GB = 250MT
+            30720: 375,    // 30GB = 375MT
+            40960: 500,    // 40GB = 500MT
+            51200: 625,    // 50GB = 625MT
+            61440: 750,    // 60GB = 750MT
+            71680: 875,    // 70GB = 875MT
+            81920: 1000,   // 80GB = 1000MT
+            92160: 1125,   // 90GB = 1125MT
+            102400: 1250   // 100GB = 1250MT
+        },
+        // === TABELA DE SALDO DATA STORE ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 815,   // 1000MT saldo = 815MT pagamento
+            2000: 1630,  // 2000MT saldo = 1630MT pagamento
+            3000: 2445,  // 3000MT saldo = 2445MT pagamento
+            4000: 3260,  // 4000MT saldo = 3260MT pagamento
+            5000: 4075,  // 5000MT saldo = 4075MT pagamento
+            6000: 4890,  // 6000MT saldo = 4890MT pagamento
+            7000: 5705,  // 7000MT saldo = 5705MT pagamento
+            8000: 6520,  // 8000MT saldo = 6520MT pagamento
+            9000: 7335,  // 9000MT saldo = 7335MT pagamento
+            10000: 8150  // 10000MT saldo = 8150MT pagamento
+        },
+        tabela: `🚨📢🔥 PROMOÇÃO GIGABYTES COMPLETOS 🔥📢🚨
+📅 Outubro 2025
+✅ Apenas para clientes Vodacom
+
+🛜 10GB = 125MT 💰
+🛜 20GB = 250MT 💰
+🛜 30GB = 375MT 💰
+🛜 40GB = 500MT 💰
+🛜 50GB = 625MT 💰
+🛜 60GB = 750MT 💰
+🛜 70GB = 875MT 💰
+🛜 80GB = 1000MT 💰
+🛜 90GB = 1125MT 💰
+🛜 100GB = 1250MT 💰
+
+⚡ Aproveita já e garante o teu pacote antes do fim da promoção! ⚡`,
+
+        pagamento: `✅FORMAS DE PAGAMENTO ATUALIZADAS
+
+💡M-PESA
+NÚMERO: 848715208
+NOME: NATACHA ALICE
+
+💡eMola
+NÚMERO: 871112049
+NOME: NATACHA ALICE
+
+📝 Após a transferência, mande:
+1️⃣ Comprovativo
+2️⃣ UM número que vai receber`,
+
+        saldo: `🚨✅🔥 SALDO PROMO🔥✅🚨
+✅1000 Saldo  = 815MT
+📅 Outubro 2025
+
+📶 50   = 45MT 💰
+📶 100  = 85MT 💰
+📶 200  = 170MT 💰
+📶 300  = 255MT 💰
+📶 400  = 340MT 💰
+📶 500  = 410MT 💰
+📶 1000 = 815MT 💰
+📶 2000 = 1630MT 💰
+📶 3000 = 2445MT 💰
+📶 4000 = 3260MT 💰
+📶 5000 = 4075MT 💰
+📶 6000 = 4890MT 💰
+📶 7000 = 5705MT 💰
+📶 8000 = 6520MT 💰
+📶 9000 = 7335MT 💰
+📶 10000 = 8150MT 💰
+
+📩 Após o envio do valor, envie o comprovativo no grupo
+e o respetivo número beneficiário.
+
+⚡ Aproveitem! ⚡`
     }
 };
 
