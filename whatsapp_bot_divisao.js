@@ -651,9 +651,9 @@ class WhatsAppBotDivisao {
             
             // 6. PROCESSAMENTO EM BACKGROUND (OTIMIZADO PARA VELOCIDADE)
             console.log(`🚀 DIVISÃO: Iniciando processamento em background de ${subdivisoes.length} blocos`);
-            
+
             // EXECUTAR EM BACKGROUND - NÃO BLOQUEIA A RESPOSTA
-            this.processarPedidosEmBackground(subdivisoes, grupoId, comprovativo.referencia, message);
+            this.processarPedidosEmBackground(subdivisoes, grupoId, comprovativo.referencia, comprovativo.valor, message);
             
             // 7. RESPOSTA RÁPIDA (PROCESSAMENTO CONTINUA EM BACKGROUND)
             const remetenteLimpeza = this.normalizarRemetente(message.author || message.from);
@@ -683,7 +683,7 @@ class WhatsAppBotDivisao {
     async buscarPagamentoNaPlanilha(referencia, valorEsperado) {
         try {
             console.log(`🔍 DIVISÃO: Buscando pagamento ${referencia} - ${valorEsperado}MT`);
-            
+
             const resultado = await this.tentarComRetry(
                 async (timeout) => {
                     const response = await axios.post(this.SCRIPTS_CONFIG.PAGAMENTOS, {
@@ -696,7 +696,7 @@ class WhatsAppBotDivisao {
                             'Content-Type': 'application/json'
                         }
                     });
-                    
+
                     if (response.data && response.data.encontrado) {
                         // VERIFICAR SE PAGAMENTO JÁ FOI PROCESSADO
                         if (response.data.ja_processado) {
@@ -704,7 +704,7 @@ class WhatsAppBotDivisao {
                             return 'ja_processado';
                         }
 
-                        console.log(`✅ DIVISÃO: Pagamento encontrado e marcado como processado!`);
+                        console.log(`✅ DIVISÃO: Pagamento encontrado (ainda não marcado como processado)!`);
                         return true;
                     }
 
@@ -714,11 +714,41 @@ class WhatsAppBotDivisao {
                 `Busca de pagamento ${referencia}`,
                 2 // Apenas 2 tentativas para busca
             );
-            
+
             return resultado;
-            
+
         } catch (error) {
             console.error(`❌ DIVISÃO: Erro ao buscar pagamento após tentativas:`, error.message);
+            return false;
+        }
+    }
+
+    // === MARCAR PAGAMENTO COMO PROCESSADO ===
+    async marcarPagamentoComoProcessado(referencia, valorEsperado) {
+        try {
+            console.log(`✅ DIVISÃO: Marcando pagamento ${referencia} como processado`);
+
+            const response = await axios.post(this.SCRIPTS_CONFIG.PAGAMENTOS, {
+                action: "marcar_processado",
+                referencia: referencia,
+                valor: valorEsperado
+            }, {
+                timeout: 30000,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.data && response.data.success) {
+                console.log(`✅ DIVISÃO: Pagamento marcado como processado com sucesso!`);
+                return true;
+            }
+
+            console.log(`⚠️ DIVISÃO: Falha ao marcar pagamento como processado`);
+            return false;
+
+        } catch (error) {
+            console.error(`❌ DIVISÃO: Erro ao marcar pagamento como processado:`, error.message);
             return false;
         }
     }
@@ -1034,7 +1064,7 @@ class WhatsAppBotDivisao {
     }
 
     // === PROCESSAMENTO EM BACKGROUND (NOVA FUNÇÃO) ===
-    async processarPedidosEmBackground(subdivisoes, grupoId, referenciaOriginal, message) {
+    async processarPedidosEmBackground(subdivisoes, grupoId, referenciaOriginal, valorOriginal, message) {
         const inicioBackground = Date.now();
         let sucessos = 0;
         let duplicados = 0;
@@ -1114,7 +1144,13 @@ class WhatsAppBotDivisao {
             
             const tempoTotal = Date.now() - inicioBackground;
             console.log(`🏁 BACKGROUND: Concluído em ${tempoTotal}ms - ✅${sucessos} ⚠️${duplicados} ❌${erros}`);
-            
+
+            // MARCAR PAGAMENTO COMO PROCESSADO (somente se teve sucesso)
+            if (sucessos > 0 || duplicados > 0) {
+                console.log(`🔄 BACKGROUND: Marcando pagamento ${referenciaOriginal} como processado...`);
+                await this.marcarPagamentoComoProcessado(referenciaOriginal, valorOriginal);
+            }
+
             // ENVIAR MENSAGEM FINAL DE CONCLUSÃO
             await this.enviarMensagemConclusao(message, sucessos, duplicados, erros, pedidosDuplicados, subdivisoes.length, tempoTotal);
             

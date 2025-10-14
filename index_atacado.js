@@ -555,9 +555,9 @@ async function verificarPagamentoIndividual(referencia, valorEsperado) {
     try {
         // Normalizar valor antes da verificação
         const valorNormalizado = normalizarValor(valorEsperado);
-        
+
         console.log(`🔍 INDIVIDUAL: Verificando pagamento ${referencia} - ${valorNormalizado}MT (original: ${valorEsperado})`);
-        
+
         // Usar mesma URL e estrutura do bot de divisão
         const response = await axios.post(botDivisao.SCRIPTS_CONFIG.PAGAMENTOS, {
             action: "buscar_por_referencia",
@@ -569,7 +569,7 @@ async function verificarPagamentoIndividual(referencia, valorEsperado) {
                 'Content-Type': 'application/json'
             }
         });
-        
+
         if (response.data && response.data.encontrado) {
             // VERIFICAR SE PAGAMENTO JÁ FOI PROCESSADO
             if (response.data.ja_processado) {
@@ -577,15 +577,46 @@ async function verificarPagamentoIndividual(referencia, valorEsperado) {
                 return 'ja_processado';
             }
 
-            console.log(`✅ INDIVIDUAL: Pagamento encontrado e marcado como processado!`);
+            console.log(`✅ INDIVIDUAL: Pagamento encontrado (ainda não marcado como processado)!`);
             return true;
         }
 
         console.log(`❌ INDIVIDUAL: Pagamento não encontrado`);
         return false;
-        
+
     } catch (error) {
         console.error(`❌ INDIVIDUAL: Erro ao verificar pagamento:`, error.message);
+        return false;
+    }
+}
+
+// === FUNÇÃO PARA MARCAR PAGAMENTO COMO PROCESSADO ===
+async function marcarPagamentoComoProcessado(referencia, valorEsperado) {
+    try {
+        const valorNormalizado = normalizarValor(valorEsperado);
+        console.log(`✅ INDIVIDUAL: Marcando pagamento ${referencia} como processado`);
+
+        const response = await axios.post(botDivisao.SCRIPTS_CONFIG.PAGAMENTOS, {
+            action: "marcar_processado",
+            referencia: referencia,
+            valor: valorNormalizado
+        }, {
+            timeout: 30000,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.data && response.data.success) {
+            console.log(`✅ INDIVIDUAL: Pagamento marcado como processado com sucesso!`);
+            return true;
+        }
+
+        console.log(`⚠️ INDIVIDUAL: Falha ao marcar pagamento como processado`);
+        return false;
+
+    } catch (error) {
+        console.error(`❌ INDIVIDUAL: Erro ao marcar pagamento como processado:`, error.message);
         return false;
     }
 }
@@ -646,6 +677,9 @@ async function tentarPagamentoComRetryAutomatico(referencia, valorEsperado, dado
                     await enviarComSubdivisaoAutomatica(referencia, produtoConvertido, numero, message.from, message);
                     await registrarComprador(message.from, numero, message._data.notifyName || 'Cliente', produto);
                 }
+
+                // Marcar pagamento como processado APÓS sucesso
+                await marcarPagamentoComoProcessado(referencia, valorEsperado);
                 return;
             }
 
@@ -2326,10 +2360,16 @@ client.on('message', async (message) => {
                     // Processar saldo
                     await enviarSaldoParaTasker(referencia, produtoConvertido, numero, message.from, message);
                     await registrarComprador(message.from, numero, nomeContato, produtoConvertido);
+
+                    // Marcar pagamento como processado APÓS sucesso
+                    await marcarPagamentoComoProcessado(referencia, valorEsperado);
                 } else {
                     // Processar megas
                     await enviarComSubdivisaoAutomatica(referencia, produtoConvertido, numero, message.from, message);
                     await registrarComprador(message.from, numero, nomeContato, resultadoIA.valorPago || produto);
+
+                    // Marcar pagamento como processado APÓS sucesso
+                    await marcarPagamentoComoProcessado(referencia, valorEsperado);
                 }
                 
                 if (message.from === ENCAMINHAMENTO_CONFIG.grupoOrigem) {
