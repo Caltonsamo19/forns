@@ -57,6 +57,48 @@ class WhatsAppBotDivisao {
                     '258840326152', // Versão completa com prefixo
                     '877777777'    // Adicionar outros números de pagamento do grupo aqui
                 ]
+            },
+            '120363422552100928@g.us': {
+                nome: 'Big Data Stock',
+                precos: {
+                    10240: 125,    // 10GB = 125MT (12.5MT/GB)
+                    20480: 250,    // 20GB = 250MT
+                    30720: 375,    // 30GB = 375MT
+                    40960: 500,    // 40GB = 500MT
+                    51200: 625,    // 50GB = 625MT
+                    61440: 750,    // 60GB = 750MT
+                    71680: 875,    // 70GB = 875MT
+                    81920: 1000,   // 80GB = 1000MT
+                    92160: 1125,   // 90GB = 1125MT
+                    102400: 1250   // 100GB = 1250MT
+                },
+                // NÚMEROS DE PAGAMENTO DO GRUPO (NUNCA devem receber megas)
+                numerosPagamento: [
+                    '857451196',   // M-Pesa - Leonor
+                    '258857451196'  // M-Pesa - Leonor (com prefixo)
+                ]
+            },
+            '120363304379117798@g.us': {
+                nome: 'Shop Net Revendedores',
+                precos: {
+                    10240: 128,    // 10GB = 128MT (12.8MT/GB)
+                    20480: 256,    // 20GB = 256MT
+                    30720: 384,    // 30GB = 384MT
+                    40960: 512,    // 40GB = 512MT
+                    51200: 640,    // 50GB = 640MT
+                    61440: 768,    // 60GB = 768MT
+                    71680: 910,    // 70GB = 910MT
+                    81920: 1040,   // 80GB = 1040MT
+                    92160: 1170,   // 90GB = 1170MT
+                    102400: 1280   // 100GB = 1280MT
+                },
+                // NÚMEROS DE PAGAMENTO DO GRUPO (NUNCA devem receber megas)
+                numerosPagamento: [
+                    '853942672',   // M-Pesa - Almeida Vasco
+                    '258853942672', // M-Pesa - Almeida Vasco (com prefixo)
+                    '871784594',   // e-Mola - Almeida
+                    '258871784594'  // e-Mola - Almeida (com prefixo)
+                ]
             }
             // Adicionar outros grupos conforme necessário
         };
@@ -1363,7 +1405,7 @@ class WhatsAppBotDivisao {
     }
 
     // === FUNÇÃO AUXILIAR: Retry com backoff exponencial OTIMIZADA ===
-    async tentarComRetry(operacao, descricao, maxTentativas = 3) {
+    async tentarComRetry(operacao, descricao, maxTentativas = 5) {
         // OTIMIZAÇÃO: Usar fila para controlar requisições
         return await this.adicionarNaFila(async () => {
             for (let tentativa = 1; tentativa <= maxTentativas; tentativa++) {
@@ -1378,15 +1420,26 @@ class WhatsAppBotDivisao {
                     
                 } catch (error) {
                     const isTimeout = error.code === 'ECONNABORTED' && error.message.includes('timeout');
+                    const isRateLimit = error.response?.status === 429 || error.message?.includes('429');
                     const isUltimaTentativa = tentativa === maxTentativas;
-                    
+
+                    // Tratamento de timeout
                     if (isTimeout && !isUltimaTentativa) {
                         const delayMs = tentativa * 1000 + Math.random() * 1000; // 1-2s, 2-3s (jitter)
                         console.log(`⏳ DIVISÃO: Timeout na tentativa ${tentativa}, aguardando ${Math.round(delayMs)}ms...`);
                         await new Promise(resolve => setTimeout(resolve, delayMs));
                         continue;
                     }
-                    
+
+                    // Tratamento de rate limit (429)
+                    if (isRateLimit && !isUltimaTentativa) {
+                        // Backoff exponencial mais agressivo para rate limiting
+                        const backoffMs = Math.pow(2, tentativa) * 1000 + Math.random() * 1000; // 2s, 4s, 8s + jitter
+                        console.log(`🚦 DIVISÃO: Rate limit (429) na tentativa ${tentativa}, aguardando ${Math.round(backoffMs)}ms...`);
+                        await new Promise(resolve => setTimeout(resolve, backoffMs));
+                        continue;
+                    }
+
                     console.error(`❌ DIVISÃO: ${descricao} falhou na tentativa ${tentativa}:`, error.message);
                     if (isUltimaTentativa) throw error;
                 }
