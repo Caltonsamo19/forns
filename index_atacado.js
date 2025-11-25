@@ -4,6 +4,64 @@ const qrcode = require('qrcode-terminal');
 const fs = require('fs').promises;
 const axios = require('axios'); // npm install axios
 
+// === FILA DE REQUISIÇÕES PARA EVITAR RATE LIMITING ===
+class FilaRequisicoes {
+    constructor(maxConcorrentes = 3, delayEntreReqs = 500) {
+        this.fila = [];
+        this.emAndamento = 0;
+        this.maxConcorrentes = maxConcorrentes; // Máximo de requisições simultâneas
+        this.delayEntreReqs = delayEntreReqs;   // Delay entre cada requisição (500ms)
+        this.ultimaRequisicao = 0;
+    }
+
+    async adicionar(funcao, nomeOperacao = "operação") {
+        return new Promise((resolve, reject) => {
+            this.fila.push({ funcao, nomeOperacao, resolve, reject });
+            this.processar();
+        });
+    }
+
+    async processar() {
+        if (this.emAndamento >= this.maxConcorrentes || this.fila.length === 0) {
+            return;
+        }
+
+        // Aguardar delay mínimo entre requisições
+        const agora = Date.now();
+        const tempoDesdeUltima = agora - this.ultimaRequisicao;
+        if (tempoDesdeUltima < this.delayEntreReqs) {
+            await new Promise(resolve => setTimeout(resolve, this.delayEntreReqs - tempoDesdeUltima));
+        }
+
+        const item = this.fila.shift();
+        this.emAndamento++;
+        this.ultimaRequisicao = Date.now();
+
+        console.log(`📋 FILA: Processando "${item.nomeOperacao}" (${this.emAndamento}/${this.maxConcorrentes} em andamento, ${this.fila.length} na fila)`);
+
+        try {
+            const resultado = await item.funcao();
+            item.resolve(resultado);
+        } catch (error) {
+            item.reject(error);
+        } finally {
+            this.emAndamento--;
+            this.processar(); // Processar próximo item da fila
+        }
+    }
+
+    obterStatus() {
+        return {
+            emAndamento: this.emAndamento,
+            aguardando: this.fila.length,
+            total: this.emAndamento + this.fila.length
+        };
+    }
+}
+
+// Instância global da fila
+const filaRequisicoes = new FilaRequisicoes(3, 500); // 3 requisições simultâneas, 500ms entre cada
+
 // === IMPORTAR A IA ATACADO ===
 const WhatsAppAIAtacado = require('./whatsapp_ai_atacado');
 
@@ -82,16 +140,8 @@ const ia = new WhatsAppAIAtacado(process.env.OPENAI_API_KEY);
 // === INICIALIZAR O BOT DE DIVISÃO ===
 const botDivisao = new WhatsAppBotDivisao();
 
-// Configuração para encaminhamento
-const ENCAMINHAMENTO_CONFIG = {
-    grupoOrigem: '120363402160265624@g.us', // Grupo de atacado
-    numeroDestino: '258861645968@c.us',
-    intervaloSegundos: 2
-};
-
-// Fila de mensagens para encaminhar
-let filaMensagens = [];
-let processandoFila = false;
+// REMOVIDO: ENCAMINHAMENTO_CONFIG, filaMensagens e processandoFila
+// Sistema de backup via WhatsApp substituído por retry robusto com backoff exponencial
 
 // === VARIÁVEIS PARA DADOS ===
 let dadosParaTasker = [];
@@ -227,6 +277,70 @@ const CONFIGURACAO_GRUPOS_DIVISAO = {
             8000: 6520,  // 8000MT saldo = 6520MT pagamento
             9000: 7335,  // 9000MT saldo = 7335MT pagamento
             10000: 8150  // 10000MT saldo = 8150MT pagamento
+        }
+    },
+    '120363422552100928@g.us': {
+        nome: 'Big Data Stock',
+        precos: {
+            10240: 125,    // 10GB = 125MT (12.5MT/GB)
+            20480: 250,    // 20GB = 250MT
+            30720: 375,    // 30GB = 375MT
+            40960: 500,    // 40GB = 500MT
+            51200: 625,    // 50GB = 625MT
+            61440: 750,    // 60GB = 750MT
+            71680: 875,    // 70GB = 875MT
+            81920: 1000,   // 80GB = 1000MT
+            92160: 1125,   // 90GB = 1125MT
+            102400: 1250   // 100GB = 1250MT
+        },
+        // === TABELA DE SALDO BIG DATA STOCK ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 815,   // 1000MT saldo = 815MT pagamento
+            2000: 1630,  // 2000MT saldo = 1630MT pagamento
+            3000: 2445,  // 3000MT saldo = 2445MT pagamento
+            4000: 3260,  // 4000MT saldo = 3260MT pagamento
+            5000: 4075,  // 5000MT saldo = 4075MT pagamento
+            6000: 4890,  // 6000MT saldo = 4890MT pagamento
+            7000: 5705,  // 7000MT saldo = 5705MT pagamento
+            8000: 6520,  // 8000MT saldo = 6520MT pagamento
+            9000: 7335,  // 9000MT saldo = 7335MT pagamento
+            10000: 8150  // 10000MT saldo = 8150MT pagamento
+        }
+    },
+    '120363304379117798@g.us': {
+        nome: 'Shop Net Revendedores',
+        precos: {
+            10240: 128,    // 10GB = 128MT (12.8MT/GB)
+            20480: 256,    // 20GB = 256MT
+            30720: 384,    // 30GB = 384MT
+            40960: 512,    // 40GB = 512MT
+            51200: 640,    // 50GB = 640MT
+            61440: 768,    // 60GB = 768MT
+            71680: 910,    // 70GB = 910MT
+            81920: 1040,   // 80GB = 1040MT
+            92160: 1170,   // 90GB = 1170MT
+            102400: 1280   // 100GB = 1280MT
+        },
+        // === TABELA DE SALDO SHOP NET REVENDEDORES ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 820,   // 1000MT saldo = 820MT pagamento
+            2000: 1640,  // 2000MT saldo = 1640MT pagamento
+            3000: 2460,  // 3000MT saldo = 2460MT pagamento
+            4000: 3270,  // 4000MT saldo = 3270MT pagamento
+            5000: 4100,  // 5000MT saldo = 4100MT pagamento
+            6000: 4900   // 6000MT saldo = 4900MT pagamento
         }
     }
     // Only Saldo foi removido pois não precisa de divisão automática
@@ -515,24 +629,197 @@ NOME: NATACHA ALICE
 e o respetivo número beneficiário.
 
 ⚡ Aproveitem! ⚡`
+    },
+    '120363422552100928@g.us': {
+        nome: 'Big Data Stock',
+        precos: {
+            10240: 125,    // 10GB = 125MT (12.5MT/GB)
+            20480: 250,    // 20GB = 250MT
+            30720: 375,    // 30GB = 375MT
+            40960: 500,    // 40GB = 500MT
+            51200: 625,    // 50GB = 625MT
+            61440: 750,    // 60GB = 750MT
+            71680: 875,    // 70GB = 875MT
+            81920: 1000,   // 80GB = 1000MT
+            92160: 1125,   // 90GB = 1125MT
+            102400: 1250   // 100GB = 1250MT
+        },
+        // === TABELA DE SALDO BIG DATA STOCK ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 815,   // 1000MT saldo = 815MT pagamento
+            2000: 1630,  // 2000MT saldo = 1630MT pagamento
+            3000: 2445,  // 3000MT saldo = 2445MT pagamento
+            4000: 3260,  // 4000MT saldo = 3260MT pagamento
+            5000: 4075,  // 5000MT saldo = 4075MT pagamento
+            6000: 4890,  // 6000MT saldo = 4890MT pagamento
+            7000: 5705,  // 7000MT saldo = 5705MT pagamento
+            8000: 6520,  // 8000MT saldo = 6520MT pagamento
+            9000: 7335,  // 9000MT saldo = 7335MT pagamento
+            10000: 8150  // 10000MT saldo = 8150MT pagamento
+        },
+        tabela: `💥 MEGABYTESx & ☎️ CRÉDITOS 🚨
+🛜 Tudo a preços acessíveis!
+💲 Ofertas exclusivas para revendedores 👌
+
+GB's COMPLETOS 🟰 12 🔥
+
+🌐 10GB — 💳 125MT
+🌐 20GB — 💳 250MT
+🌐 30GB — 💳 375MT
+🌐 40GB — 💳 500MT
+🌐 50GB — 💳 625MT
+🌐 60GB — 💳 750MT
+🌐 70GB — 💳 875MT
+🌐 80GB — 💳 1000MT
+🌐 90GB — 💳 1125MT
+🌐 100GB — 💳 1250MT
+
+📞 1 Comprovante = 1 Número = Valor Completo`,
+
+        pagamento: `💸 FORMAS DE PAGAMENTO
+
+🔴 M-Pesa – Leonor | 📲 857451196
+
+⚠ ATENÇÃO
+▪ Após o pagamento, envie a confirmação ✉ e o seu número para receber o seu pacote 📲
+▪ Envie o valor exato da tabela 💰
+
+NB: Válido apenas para Vodacom
+🚀 Garanta seus Megabytes agora!`,
+
+        saldo: `🚨✅🔥 SALDO PROMO🔥✅🚨
+✅1000 Saldo  = 815MT
+📅 Outubro 2025
+
+📶 50   = 45MT 💰
+📶 100  = 85MT 💰
+📶 200  = 170MT 💰
+📶 300  = 255MT 💰
+📶 400  = 340MT 💰
+📶 500  = 410MT 💰
+📶 1000 = 815MT 💰
+📶 2000 = 1630MT 💰
+📶 3000 = 2445MT 💰
+📶 4000 = 3260MT 💰
+📶 5000 = 4075MT 💰
+📶 6000 = 4890MT 💰
+📶 7000 = 5705MT 💰
+📶 8000 = 6520MT 💰
+📶 9000 = 7335MT 💰
+📶 10000 = 8150MT 💰
+
+📩 Após o envio do valor, envie o comprovativo no grupo
+e o respetivo número beneficiário.
+
+⚡ Aproveitem! ⚡`
+    },
+    '120363304379117798@g.us': {
+        nome: 'Shop Net Revendedores',
+        precos: {
+            10240: 128,    // 10GB = 128MT (12.8MT/GB)
+            20480: 256,    // 20GB = 256MT
+            30720: 384,    // 30GB = 384MT
+            40960: 512,    // 40GB = 512MT
+            51200: 640,    // 50GB = 640MT
+            61440: 768,    // 60GB = 768MT
+            71680: 910,    // 70GB = 910MT
+            81920: 1040,   // 80GB = 1040MT
+            92160: 1170,   // 90GB = 1170MT
+            102400: 1280   // 100GB = 1280MT
+        },
+        // === TABELA DE SALDO SHOP NET REVENDEDORES ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 820,   // 1000MT saldo = 820MT pagamento
+            2000: 1640,  // 2000MT saldo = 1640MT pagamento
+            3000: 2460,  // 3000MT saldo = 2460MT pagamento
+            4000: 3270,  // 4000MT saldo = 3270MT pagamento
+            5000: 4100,  // 5000MT saldo = 4100MT pagamento
+            6000: 4900   // 6000MT saldo = 4900MT pagamento
+        },
+        tabela: `🛜 PROMOÇÃO Relâmpago 12.8MT
+*DE MEGABYTES & ☎️CRÉDITOS📞 EXCLUSIVO PARA REVENDEDORES*
+
+🌐 PACOTES DE INTERNET
+🔹 10GB ➡️ 128MT
+🔹 20GB ➡️ 256MT
+🔹 30GB ➡️ 384MT
+🔹 40GB ➡️ 512MT
+🔹 50GB ➡️ 640MT
+🔹 60GB ➡️ 768MT
+🔹 70GB ➡️ 910MT
+🔹 80GB ➡️ 1040MT
+🔹 90GB ➡️ 1170MT
+🔹 100GB ➡️ 1280MT
+
+🎯 *12,8MT por GB*
+📞 1 Comprovante = 1 Número = Valor Completo`,
+
+        pagamento: `💳 *FORMAS DE PAGAMENTO DISPONÍVEIS*
+━━━━━━━━━━━━━━━━━━
+📲 *M-Pesa*
+• 🔢 Número: *853942672*
+• 👤 Titular: *Almeida Vasco*
+
+📲 *e-Mola*
+• 🔢 Número: *871784594*
+• 👤 Titular: *Almeida*
+━━━━━━━━━━━━━━━━━━
+✅ Após pagar, envie:
+1️⃣ O comprovativo
+2️⃣ O número que vai receber Saldo`,
+
+        saldo: `*Saldo Vodacom*
+*O Pagamento de saldo Deve ser feito via M pesa*
+
+📶 50   = 45MT 💰
+📶 100  = 85MT 💰
+📶 200  = 170MT 💰
+📶 300  = 255MT 💰
+📶 400  = 340MT 💰
+📶 500  = 410MT 💰
+📶 1000 = 820MT 💰
+📶 2000 = 1640MT 💰
+📶 3000 = 2460MT 💰
+📶 4000 = 3270MT 💰
+📶 5000 = 4100MT 💰
+📶 6000 = 4900MT 💰
+
+✅ Após pagar, envie:
+1️⃣ O comprovativo
+2️⃣ O número que vai receber Saldo`
     }
 };
 
 // === FUNÇÃO GOOGLE SHEETS ===
 
-// Função para retry automático
-async function tentarComRetry(funcao, maxTentativas = 3, delay = 2000) {
+// Função para retry automático com backoff exponencial
+async function tentarComRetry(funcao, maxTentativas = 5, delayInicial = 2000) {
     for (let tentativa = 1; tentativa <= maxTentativas; tentativa++) {
         try {
             return await funcao();
         } catch (error) {
             console.log(`⚠️ Tentativa ${tentativa}/${maxTentativas} falhou: ${error.message}`);
-            
+
             if (tentativa === maxTentativas) {
+                console.error(`❌ ERRO CRÍTICO: Todas as ${maxTentativas} tentativas falharam!`);
                 throw error; // Última tentativa, propagar erro
             }
-            
-            // Aguardar antes da próxima tentativa
+
+            // Backoff exponencial: 2s, 4s, 8s, 16s, 32s
+            const delay = delayInicial * Math.pow(2, tentativa - 1);
+            console.log(`⏳ Aguardando ${delay}ms antes da próxima tentativa...`);
             await new Promise(resolve => setTimeout(resolve, delay));
         }
     }
@@ -569,57 +856,62 @@ async function enviarSaldoParaGoogleSheets(dadosCompletos, grupoId, timestamp) {
     }
 }
 
-// === FUNÇÃO GOOGLE SHEETS SIMPLIFICADA ===
+// === FUNÇÃO GOOGLE SHEETS SIMPLIFICADA COM RETRY ROBUSTO ===
 async function enviarParaGoogleSheets(dadosCompletos, grupoId, timestamp) {
     const dados = {
         grupo_id: grupoId,
         timestamp: timestamp,
         dados: dadosCompletos  // REF|MEGAS|NUMERO|TIMESTAMP como string única
     };
-    
+
+    console.log(`📊 Enviando para Google Sheets com RETRY ROBUSTO: ${dadosCompletos}`);
+    console.log(`📍 Grupo: ${grupoId}`);
+    console.log(`⏰ Timestamp: ${timestamp}`);
+
     try {
-        console.log(`📊 Enviando para Google Sheets SIMPLIFICADO: ${dadosCompletos}`);
-        console.log(`📍 Grupo: ${grupoId}`);
-        console.log(`⏰ Timestamp: ${timestamp}`);
-        
-        const response = await axios.post(GOOGLE_SHEETS_CONFIG_ATACADO.scriptUrl, dados, {
-            timeout: GOOGLE_SHEETS_CONFIG_ATACADO.timeout,
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Bot-Source': 'WhatsApp-Bot-Atacado-Simplificado'
-            },
-            validateStatus: function (status) {
-                return status < 500;
+        // Usar retry com backoff exponencial (5 tentativas: 2s, 4s, 8s, 16s, 32s)
+        const resultado = await tentarComRetry(async () => {
+            const response = await axios.post(GOOGLE_SHEETS_CONFIG_ATACADO.scriptUrl, dados, {
+                timeout: GOOGLE_SHEETS_CONFIG_ATACADO.timeout,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Bot-Source': 'WhatsApp-Bot-Atacado-Simplificado'
+                },
+                validateStatus: function (status) {
+                    return status < 500;
+                }
+            });
+
+            // Log detalhado da resposta para debug
+            console.log(`🔍 DEBUG Google Sheets Response:`, {
+                status: response.status,
+                statusText: response.statusText,
+                data: response.data,
+                dataType: typeof response.data,
+                hasSuccess: response.data?.success,
+                hasError: response.data?.error
+            });
+
+            if (response.data && response.data.success) {
+                console.log(`✅ Google Sheets: Dados enviados! Row: ${response.data.row}`);
+                console.log(`📋 Dados inseridos: ${response.data.dados}`);
+                return { sucesso: true, row: response.data.row };
+            } else if (response.data && response.data.duplicado) {
+                // Caso especial: Pagamento duplicado (não deve fazer retry)
+                console.log(`⚠️ Google Sheets: Pagamento duplicado - ${response.data.referencia}`);
+                return {
+                    sucesso: false,
+                    duplicado: true,
+                    referencia: response.data.referencia,
+                    erro: `Pagamento duplicado: ${response.data.referencia}`
+                };
+            } else {
+                const errorMsg = response.data?.error || `Resposta inválida: ${JSON.stringify(response.data)}`;
+                throw new Error(errorMsg);
             }
-        });
-        
-        // Log detalhado da resposta para debug
-        console.log(`🔍 DEBUG Google Sheets Response:`, {
-            status: response.status,
-            statusText: response.statusText,
-            data: response.data,
-            dataType: typeof response.data,
-            hasSuccess: response.data?.success,
-            hasError: response.data?.error
-        });
-        
-        if (response.data && response.data.success) {
-            console.log(`✅ Google Sheets: Dados enviados! Row: ${response.data.row}`);
-            console.log(`📋 Dados inseridos: ${response.data.dados}`);
-            return { sucesso: true, row: response.data.row };
-        } else if (response.data && response.data.duplicado) {
-            // Caso especial: Pagamento duplicado
-            console.log(`⚠️ Google Sheets: Pagamento duplicado - ${response.data.referencia}`);
-            return { 
-                sucesso: false, 
-                duplicado: true, 
-                referencia: response.data.referencia,
-                erro: `Pagamento duplicado: ${response.data.referencia}` 
-            };
-        } else {
-            const errorMsg = response.data?.error || `Resposta inválida: ${JSON.stringify(response.data)}`;
-            throw new Error(errorMsg);
-        }
+        }, 5, 2000); // 5 tentativas com delay inicial de 2s
+
+        return resultado;
         
     } catch (error) {
         console.error(`❌ Erro Google Sheets: ${error.message}`);
@@ -674,6 +966,74 @@ function normalizarValor(valor) {
     return valor;
 }
 
+// === FUNÇÃO DE RETRY COM EXPONENTIAL BACKOFF E FILA ===
+async function retryComBackoff(funcao, maxTentativas = 3, nomeOperacao = "operação") {
+    let tentativa = 0;
+    let delayBase = 1000; // 1 segundo inicial
+
+    while (tentativa < maxTentativas) {
+        try {
+            tentativa++;
+            console.log(`🔄 ${nomeOperacao}: Tentativa ${tentativa}/${maxTentativas}`);
+
+            // Adicionar à fila para controlar rate limiting
+            const resultado = await filaRequisicoes.adicionar(funcao, nomeOperacao);
+            console.log(`✅ ${nomeOperacao}: Sucesso na tentativa ${tentativa}`);
+            return resultado;
+
+        } catch (error) {
+            const isUltimaTentativa = tentativa >= maxTentativas;
+            const statusCode = error.response?.status;
+            const errorMsg = error.message;
+
+            // Tratamento específico para erro 429 (Rate Limit)
+            if (statusCode === 429) {
+                const retryAfter = error.response?.headers['retry-after'];
+                const delayParaEsperar = retryAfter ? parseInt(retryAfter) * 1000 : delayBase * Math.pow(2, tentativa);
+
+                if (!isUltimaTentativa) {
+                    console.warn(`⚠️ ${nomeOperacao}: Rate limit (429) - aguardando ${delayParaEsperar}ms antes de tentar novamente...`);
+                    await new Promise(resolve => setTimeout(resolve, delayParaEsperar));
+                    continue;
+                } else {
+                    console.error(`❌ ${nomeOperacao}: Rate limit (429) - máximo de tentativas atingido`);
+                    throw error;
+                }
+            }
+
+            // Tratamento para timeout
+            if (errorMsg.includes('timeout')) {
+                if (!isUltimaTentativa) {
+                    const delayTimeout = delayBase * Math.pow(2, tentativa);
+                    console.warn(`⚠️ ${nomeOperacao}: Timeout - aguardando ${delayTimeout}ms antes de tentar novamente...`);
+                    await new Promise(resolve => setTimeout(resolve, delayTimeout));
+                    continue;
+                } else {
+                    console.error(`❌ ${nomeOperacao}: Timeout - máximo de tentativas atingido`);
+                    throw error;
+                }
+            }
+
+            // Outros erros de rede (ECONNREFUSED, ENOTFOUND, etc)
+            if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT') {
+                if (!isUltimaTentativa) {
+                    const delayRede = delayBase * Math.pow(2, tentativa);
+                    console.warn(`⚠️ ${nomeOperacao}: Erro de rede (${error.code}) - aguardando ${delayRede}ms antes de tentar novamente...`);
+                    await new Promise(resolve => setTimeout(resolve, delayRede));
+                    continue;
+                } else {
+                    console.error(`❌ ${nomeOperacao}: Erro de rede (${error.code}) - máximo de tentativas atingido`);
+                    throw error;
+                }
+            }
+
+            // Para outros erros, não faz retry
+            console.error(`❌ ${nomeOperacao}: Erro não recuperável:`, errorMsg);
+            throw error;
+        }
+    }
+}
+
 // === FUNÇÃO PARA VERIFICAR PAGAMENTO (reutiliza mesma lógica da divisão) ===
 async function verificarPagamentoIndividual(referencia, valorEsperado) {
     try {
@@ -682,17 +1042,23 @@ async function verificarPagamentoIndividual(referencia, valorEsperado) {
 
         console.log(`🔍 INDIVIDUAL: Verificando pagamento ${referencia} - ${valorNormalizado}MT (original: ${valorEsperado})`);
 
-        // Usar mesma URL e estrutura do bot de divisão
-        const response = await axios.post(botDivisao.SCRIPTS_CONFIG.PAGAMENTOS, {
-            action: "buscar_por_referencia",
-            referencia: referencia,
-            valor: valorNormalizado
-        }, {
-            timeout: 60000,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        // Usar retry com backoff para chamada HTTP
+        const response = await retryComBackoff(
+            async () => {
+                return await axios.post(botDivisao.SCRIPTS_CONFIG.PAGAMENTOS, {
+                    action: "buscar_por_referencia",
+                    referencia: referencia,
+                    valor: valorNormalizado
+                }, {
+                    timeout: 120000, // Aumentado de 60s para 120s
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            },
+            3, // 3 tentativas
+            `Verificar pagamento ${referencia}`
+        );
 
         if (response.data && response.data.encontrado) {
             // VERIFICAR SE PAGAMENTO JÁ FOI PROCESSADO
@@ -720,16 +1086,23 @@ async function marcarPagamentoComoProcessado(referencia, valorEsperado) {
         const valorNormalizado = normalizarValor(valorEsperado);
         console.log(`✅ INDIVIDUAL: Marcando pagamento ${referencia} como processado`);
 
-        const response = await axios.post(botDivisao.SCRIPTS_CONFIG.PAGAMENTOS, {
-            action: "marcar_processado",
-            referencia: referencia,
-            valor: valorNormalizado
-        }, {
-            timeout: 60000,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        // Usar retry com backoff para chamada HTTP
+        const response = await retryComBackoff(
+            async () => {
+                return await axios.post(botDivisao.SCRIPTS_CONFIG.PAGAMENTOS, {
+                    action: "marcar_processado",
+                    referencia: referencia,
+                    valor: valorNormalizado
+                }, {
+                    timeout: 120000, // Aumentado de 60s para 120s
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            },
+            3, // 3 tentativas
+            `Marcar pagamento ${referencia} como processado`
+        );
 
         if (response.data && response.data.success) {
             console.log(`✅ INDIVIDUAL: Pagamento marcado como processado com sucesso!`);
@@ -1075,7 +1448,7 @@ async function enviarParaTasker(referencia, megas, numero, grupoId, messageConte
         console.log(`⚠️ [${grupoNome}] Pagamento DUPLICADO detectado: ${resultado.referencia}`);
         dadosParaTasker[dadosParaTasker.length - 1].metodo = 'duplicado';
         dadosParaTasker[dadosParaTasker.length - 1].status = 'duplicado';
-        
+
         // Notificar no WhatsApp se houver contexto da mensagem
         if (messageContext) {
             try {
@@ -1096,9 +1469,26 @@ async function enviarParaTasker(referencia, megas, numero, grupoId, messageConte
         // Retornar dados normalmente para não quebrar o sistema de divisão
 
     } else {
-        console.log(`🔄 [${grupoNome}] Google Sheets falhou, usando WhatsApp backup...`);
-        enviarViaWhatsAppTasker(dadosCompletos, grupoNome);
-        dadosParaTasker[dadosParaTasker.length - 1].metodo = 'whatsapp_backup';
+        // ❌ FALHA CRÍTICA: Todas as tentativas de retry falharam
+        console.error(`❌ [${grupoNome}] FALHA CRÍTICA: Google Sheets falhou após todas as tentativas de retry!`);
+        console.error(`❌ Dados NÃO foram salvos: ${dadosCompletos}`);
+        dadosParaTasker[dadosParaTasker.length - 1].metodo = 'falha_critica';
+        dadosParaTasker[dadosParaTasker.length - 1].erro = resultado.erro;
+
+        // Notificar sobre falha crítica
+        if (messageContext) {
+            try {
+                await messageContext.reply(
+                    `❌ *ERRO CRÍTICO NO SISTEMA*\n\n` +
+                    `⚠️ **Não foi possível processar o pedido após múltiplas tentativas**\n\n` +
+                    `📋 **Dados:** ${dadosCompletos}\n\n` +
+                    `🔄 **Por favor, tente novamente em alguns minutos**\n` +
+                    `📞 **Se o problema persistir, contacte o suporte**`
+                );
+            } catch (error) {
+                console.error(`❌ Erro ao enviar notificação de falha crítica:`, error);
+            }
+        }
     }
     
     await salvarArquivoTasker(dadosCompletos, grupoNome, timestamp);
@@ -1260,23 +1650,7 @@ function converterMegasParaNumero(megas) {
     return megas;
 }
 
-function enviarViaWhatsAppTasker(linhaCompleta, grupoNome, autorMensagem) {
-    const item = {
-        conteudo: linhaCompleta,
-        autor: autorMensagem,
-        grupo: grupoNome,
-        timestamp: Date.now(),
-        id: Date.now() + Math.random(),
-        tipo: 'tasker_data_backup_atacado'
-    };
-
-    filaMensagens.push(item);
-    console.log(`📱 WhatsApp Backup → Tasker: ${linhaCompleta}`);
-
-    if (!processandoFila) {
-        processarFila();
-    }
-}
+// REMOVIDO: enviarViaWhatsAppTasker - Sistema de backup via WhatsApp foi substituído por retry robusto
 
 async function salvarArquivoTasker(linhaCompleta, grupoNome, timestamp) {
     try {
@@ -1646,57 +2020,9 @@ async function registrarComprador(grupoId, numeroComprador, nomeContato, megas) 
     console.log(`💰 Comprador atacado registrado: ${nomeContato} (${numeroComprador}) - ${megas}`);
 }
 
-// === FILA DE MENSAGENS ===
-
-function adicionarNaFila(mensagem, autor, nomeGrupo, timestamp) {
-    const item = {
-        conteudo: mensagem,
-        autor: autor,
-        grupo: nomeGrupo,
-        timestamp: timestamp,
-        id: Date.now() + Math.random()
-    };
-
-    filaMensagens.push(item);
-    console.log(`📥 Adicionado à fila: ${filaMensagens.length} mensagens`);
-
-    if (!processandoFila) {
-        processarFila();
-    }
-}
-
-async function processarFila() {
-    if (processandoFila || filaMensagens.length === 0) {
-        return;
-    }
-
-    processandoFila = true;
-    console.log(`🚀 Processando ${filaMensagens.length} mensagens...`);
-
-    while (filaMensagens.length > 0) {
-        const item = filaMensagens.shift();
-
-        try {
-            await withRetry(async () => {
-                await client.sendMessage(ENCAMINHAMENTO_CONFIG.numeroDestino, item.conteudo);
-            });
-            
-            console.log(`✅ Encaminhado: ${item.conteudo.substring(0, 50)}...`);
-
-            if (filaMensagens.length > 0) {
-                await new Promise(resolve => setTimeout(resolve, ENCAMINHAMENTO_CONFIG.intervaloSegundos * 1000));
-            }
-
-        } catch (error) {
-            console.error(`❌ Erro ao encaminhar:`, error);
-            filaMensagens.unshift(item);
-            await new Promise(resolve => setTimeout(resolve, 10000));
-        }
-    }
-
-    processandoFila = false;
-    console.log(`🎉 Fila processada!`);
-}
+// === FILA DE MENSAGENS (REMOVIDA) ===
+// NOTA: Sistema de backup via WhatsApp foi completamente removido
+// Agora usa apenas retry robusto com backoff exponencial para Google Sheets
 
 // === EVENTOS DO BOT ===
 
@@ -1918,8 +2244,8 @@ client.on('message', async (message) => {
                     resposta += `🏢 *${config.nome}*\n`;
                     resposta += `   📈 Total: ${dadosGrupo.length}\n`;
                     resposta += `   📅 Hoje: ${hoje.length}\n`;
-                    resposta += `   📊 Sheets: ${dadosGrupo.filter(d => d.metodo === 'google_sheets').length}\n`;
-                    resposta += `   📱 Backup: ${dadosGrupo.filter(d => d.metodo === 'whatsapp_backup').length}\n`;
+                    resposta += `   ✅ Enviados: ${dadosGrupo.filter(d => d.metodo === 'google_sheets').length}\n`;
+                    resposta += `   ❌ Falhas: ${dadosGrupo.filter(d => d.metodo === 'falha_critica').length}\n`;
                     resposta += `   🆔 ID: \`${grupoId}\`\n\n`;
                 }
                 
@@ -1931,23 +2257,25 @@ client.on('message', async (message) => {
                 const dados = obterDadosTasker();
                 const hoje = obterDadosTaskerHoje();
                 const sheets = dados.filter(d => d.metodo === 'google_sheets').length;
-                const whatsapp = dados.filter(d => d.metodo === 'whatsapp_backup').length;
-                
+                const falhas = dados.filter(d => d.metodo === 'falha_critica').length;
+                const duplicados = dados.filter(d => d.metodo === 'duplicado').length;
+
                 let resposta = `📊 *GOOGLE SHEETS STATUS ATACADO*\n━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-                resposta += `📈 Total enviado: ${dados.length}\n`;
+                resposta += `📈 Total processado: ${dados.length}\n`;
                 resposta += `📅 Hoje: ${hoje.length}\n`;
-                resposta += `📊 Via Google Sheets: ${sheets}\n`;
-                resposta += `📱 Via WhatsApp: ${whatsapp}\n`;
-                resposta += `📱 Fila atual: ${filaMensagens.length}\n\n`;
-                
+                resposta += `✅ Enviados com sucesso: ${sheets}\n`;
+                resposta += `⚠️ Duplicados: ${duplicados}\n`;
+                resposta += `❌ Falhas críticas: ${falhas}\n\n`;
+
                 if (dados.length > 0) {
-                    resposta += `📋 *Últimos 5 enviados:*\n`;
+                    resposta += `📋 *Últimos 5 processados:*\n`;
                     dados.slice(-5).forEach((item, index) => {
-                        const metodo = item.metodo === 'google_sheets' ? '📊' : '📱';
-                        resposta += `${index + 1}. ${metodo} ${item.dados} (${item.grupo})\n`;
+                        const emoji = item.metodo === 'google_sheets' ? '✅' :
+                                     item.metodo === 'duplicado' ? '⚠️' : '❌';
+                        resposta += `${index + 1}. ${emoji} ${item.dados} (${item.grupo})\n`;
                     });
                 }
-                
+
                 await message.reply(resposta);
                 return;
             }
@@ -2403,12 +2731,9 @@ client.on('message', async (message) => {
                         await enviarComSubdivisaoAutomatica(referencia, produtoConvertido, numero, message.from, message);
                         await registrarComprador(message.from, numero, nomeContato, resultadoIA.valorPago || produto);
                     }
-                    
-                    if (message.from === ENCAMINHAMENTO_CONFIG.grupoOrigem) {
-                        const timestampMensagem = new Date().toLocaleString('pt-BR');
-                        adicionarNaFila(dadosCompletos, autorMensagem, configGrupo.nome, timestampMensagem);
-                    }
-                    
+
+                    // REMOVIDO: Sistema de encaminhamento via WhatsApp substituído por retry robusto
+
                     const tipoProdutoTexto = isSaldo ? 'Saldo' : 'Megas';
                     const produtoTexto = isSaldo ? `${produtoConvertido}MT` : produto;
 
@@ -2495,12 +2820,9 @@ client.on('message', async (message) => {
                     // Marcar pagamento como processado APÓS sucesso
                     await marcarPagamentoComoProcessado(referencia, valorEsperado);
                 }
-                
-                if (message.from === ENCAMINHAMENTO_CONFIG.grupoOrigem) {
-                    const timestampMensagem = new Date().toLocaleString('pt-BR');
-                    adicionarNaFila(dadosCompletos, autorMensagem, configGrupo.nome, timestampMensagem);
-                }
-                
+
+                // REMOVIDO: Sistema de encaminhamento via WhatsApp substituído por retry robusto
+
                 const tipoProdutoTexto = isSaldo ? 'Saldo' : 'Megas';
                 const produtoTexto = isSaldo ? `${produtoConvertido}MT` : produto;
 
