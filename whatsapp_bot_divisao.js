@@ -99,6 +99,29 @@ class WhatsAppBotDivisao {
                     '871784594',   // e-Mola - Almeida
                     '258871784594'  // e-Mola - Almeida (com prefixo)
                 ]
+            },
+            '120363390556636836@g.us': {
+                nome: 'Net Vodacom Para Revendedores',
+                precos: {
+                    10240: 130,    // 10GB = 130MT (13MT/GB)
+                    20480: 260,    // 20GB = 260MT
+                    30720: 390,    // 30GB = 390MT
+                    40960: 520,    // 40GB = 520MT
+                    51200: 650,    // 50GB = 650MT
+                    61440: 768,    // 60GB = 768MT (12.8MT/GB VIP)
+                    71680: 896,    // 70GB = 896MT
+                    81920: 1024,   // 80GB = 1024MT
+                    92160: 1152,   // 90GB = 1152MT
+                    103424: 1280   // 101GB = 1280MT
+                },
+                // NÚMEROS DE PAGAMENTO DO GRUPO (NUNCA devem receber megas)
+                numerosPagamento: [
+                    '849430041',   // M-Pesa - António Zucula
+                    '258849430041', // M-Pesa - António Zucula (com prefixo)
+                    '865147776',   // e-Mola - António F. Zucula
+                    '258865147776', // e-Mola - António F. Zucula (com prefixo)
+                    '1234483208'   // MBIM - António F. Zucula
+                ]
             }
             // Adicionar outros grupos conforme necessário
         };

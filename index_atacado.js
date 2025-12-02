@@ -342,6 +342,40 @@ const CONFIGURACAO_GRUPOS_DIVISAO = {
             5000: 4100,  // 5000MT saldo = 4100MT pagamento
             6000: 4900   // 6000MT saldo = 4900MT pagamento
         }
+    },
+    '120363390556636836@g.us': {
+        nome: 'Net Vodacom Para Revendedores',
+        precos: {
+            10240: 130,    // 10GB = 130MT (13MT/GB)
+            20480: 260,    // 20GB = 260MT
+            30720: 390,    // 30GB = 390MT
+            40960: 520,    // 40GB = 520MT
+            51200: 650,    // 50GB = 650MT
+            61440: 768,    // 60GB = 768MT (12.8MT/GB VIP)
+            71680: 896,    // 70GB = 896MT
+            81920: 1024,   // 80GB = 1024MT
+            92160: 1152,   // 90GB = 1152MT
+            103424: 1280   // 101GB = 1280MT
+        },
+        // === TABELA DE SALDO NET VODACOM PARA REVENDEDORES ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 815,   // 1000MT saldo = 815MT pagamento
+            2000: 1630,  // 2000MT saldo = 1630MT pagamento
+            3000: 2445,  // 3000MT saldo = 2445MT pagamento
+            4000: 3260,  // 4000MT saldo = 3260MT pagamento
+            5000: 4075,  // 5000MT saldo = 4075MT pagamento
+            6000: 4890,  // 6000MT saldo = 4890MT pagamento
+            7000: 5705,  // 7000MT saldo = 5705MT pagamento
+            8000: 6520,  // 8000MT saldo = 6520MT pagamento
+            9000: 7335,  // 9000MT saldo = 7335MT pagamento
+            10000: 8150  // 10000MT saldo = 8150MT pagamento
+        }
     }
     // Only Saldo foi removido pois não precisa de divisão automática
 };
@@ -799,6 +833,83 @@ e o respetivo número beneficiário.
 ✅ Após pagar, envie:
 1️⃣ O comprovativo
 2️⃣ O número que vai receber Saldo`
+    },
+    '120363390556636836@g.us': {
+        nome: 'Net Vodacom Para Revendedores',
+        precos: {
+            10240: 130,    // 10GB = 130MT (13MT/GB)
+            20480: 260,    // 20GB = 260MT
+            30720: 390,    // 30GB = 390MT
+            40960: 520,    // 40GB = 520MT
+            51200: 650,    // 50GB = 650MT
+            61440: 768,    // 60GB = 768MT (12.8MT/GB VIP)
+            71680: 896,    // 70GB = 896MT
+            81920: 1024,   // 80GB = 1024MT
+            92160: 1152,   // 90GB = 1152MT
+            103424: 1280   // 101GB = 1280MT
+        },
+        // === TABELA DE SALDO NET VODACOM PARA REVENDEDORES ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 815,   // 1000MT saldo = 815MT pagamento
+            2000: 1630,  // 2000MT saldo = 1630MT pagamento
+            3000: 2445,  // 3000MT saldo = 2445MT pagamento
+            4000: 3260,  // 4000MT saldo = 3260MT pagamento
+            5000: 4075,  // 5000MT saldo = 4075MT pagamento
+            6000: 4890,  // 6000MT saldo = 4890MT pagamento
+            7000: 5705,  // 7000MT saldo = 5705MT pagamento
+            8000: 6520,  // 8000MT saldo = 6520MT pagamento
+            9000: 7335,  // 9000MT saldo = 7335MT pagamento
+            10000: 8150  // 10000MT saldo = 8150MT pagamento
+        },
+        tabela: `☎️💰 *NET VODACOM PARA REVENDEDORES*🔥🤑📲💸
+
+*10GB     💳   130MT💸*
+*20GB     💳   260MT💸*
+*30GB     💳   390MT💸*
+*40GB     💳   520MT💸*
+*50GB     💳   650MT💸*
+
+💰 *PACOTE VIP 12.8🪙*💰
+*60GB        💳     768MT💸*
+*70GB        💳     896MT💸*
+*80GB        💳   1024MT💸*
+*90GB        💳   1152MT💸*
+*101GB      💳   1280MT💸*`,
+
+        pagamento: `💰 *FORMAS/ PAGAMENTOS :*
+- 💵 *𝗘-𝗠𝗢𝗟𝗔: 865147776 💎 ANTÓNIO F. ZUCULA*
+- 💵 *𝗠-𝗣𝗘𝗦𝗔: 849430041 💎 ANTÓNIO ZUCULA*
+- 💵 *MBIM:  1234483208  💎 ANTÓNIO F. ZUCULA*
+
+*Call, sms & WhatsApp* *849430041 / 865147776*
+
+*NB:DEPOIS DE ENVIAR O VALOR, ENVIE O COMPROVANTE E O NR PARA RECEBER OS MEGAS NO GRUPO OU NO MEU PRIVADO*`,
+
+        saldo: `📦 PACOTES DE SALDO
+
+⚡ 50 Saldo ───  45 MT
+⚡ 100 Saldo ─── 85 MT
+⚡ 200 Saldo ─── 170 MT
+⚡ 300 Saldo ─── 255 MT
+⚡ 400 Saldo ─── 340 MT
+⚡ 500 Saldo ─── 410 MT
+⚡ 1000 Saldo ── 815 MT
+⚡ 2000 Saldo ───1.630 MT
+⚡ 3000 Saldo ───2.445 MT
+⚡ 4000 Saldo ── 3.260 MT
+⚡ 5000 Saldo ── 4.075 MT
+⚡ 6000 Saldo ── 4.890 MT
+⚡ 7000 Saldo ── 5.705 MT
+⚡ 8000 Saldo ── 6.520 MT
+⚡ 9000 Saldo ── 7.335 MT
+⚡ 10000 Saldo ─ 8.150 MT
+📝 *Escolha o pacote e envie o comprovativo*`
     }
 };
 
