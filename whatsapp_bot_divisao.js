@@ -156,12 +156,10 @@ class WhatsAppBotDivisao {
                 },
                 // NÚMEROS DE PAGAMENTO DO GRUPO (NUNCA devem receber megas)
                 numerosPagamento: [
-                    '840326152',   // M-Pesa - Camerson Manuel
-                    '258840326152', // M-Pesa - Camerson Manuel (com prefixo)
+                    '849239158',   // M-Pesa - Camerson Manuel / Suporte
+                    '258849239158', // M-Pesa - Camerson Manuel / Suporte (com prefixo)
                     '875778918',   // e-Mola - Mauro Germano Silva
-                    '258875778918', // e-Mola - Mauro Germano Silva (com prefixo)
-                    '849239158',   // Suporte
-                    '258849239158'  // Suporte (com prefixo)
+                    '258875778918'  // e-Mola - Mauro Germano Silva (com prefixo)
                 ]
             }
             // Adicionar outros grupos conforme necessário
