@@ -94,10 +94,10 @@ class WhatsAppBotDivisao {
                 },
                 // NÚMEROS DE PAGAMENTO DO GRUPO (NUNCA devem receber megas)
                 numerosPagamento: [
-                    '853942672',   // M-Pesa - Almeida Vasco
-                    '258853942672', // M-Pesa - Almeida Vasco (com prefixo)
-                    '871784594',   // e-Mola - Almeida
-                    '258871784594'  // e-Mola - Almeida (com prefixo)
+                    '851923280',   // M-Pesa - Almeida
+                    '258851923280', // M-Pesa - Almeida (com prefixo)
+                    '872685743',   // e-Mola - Almeida Vasco
+                    '258872685743'  // e-Mola - Almeida Vasco (com prefixo)
                 ]
             },
             '120363390556636836@g.us': {

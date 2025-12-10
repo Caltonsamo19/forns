@@ -817,19 +817,13 @@ e o respetivo número beneficiário.
 🎯 *12,8MT por GB*
 📞 1 Comprovante = 1 Número = Valor Completo`,
 
-        pagamento: `💳 *FORMAS DE PAGAMENTO DISPONÍVEIS*
-━━━━━━━━━━━━━━━━━━
-📲 *M-Pesa*
-• 🔢 Número: *853942672*
-• 👤 Titular: *Almeida Vasco*
+        pagamento: `💳 *FORMAS DE PAGAMENTO:*⤵️
+- 📲 *𝗘-𝗠𝗢𝗟𝗔: *872685743💶💰
+- *Almeida Vasco*
+- 📲 *𝗠-𝗣𝗘𝗦𝗔: 851923280💷💰
+- ↪️📞📱 *Almeida*
 
-📲 *e-Mola*
-• 🔢 Número: *871784594*
-• 👤 Titular: *Almeida*
-━━━━━━━━━━━━━━━━━━
-✅ Após pagar, envie:
-1️⃣ O comprovativo
-2️⃣ O número que vai receber Saldo`,
+📩 *Envie o seu comprovante no grupo, juntamente com o número que receberá os dados.*`,
 
         saldo: `*Saldo Vodacom*
 *O Pagamento de saldo Deve ser feito via M pesa*
