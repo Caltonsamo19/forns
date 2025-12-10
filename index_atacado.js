@@ -376,6 +376,23 @@ const CONFIGURACAO_GRUPOS_DIVISAO = {
             9000: 7335,  // 9000MT saldo = 7335MT pagamento
             10000: 8150  // 10000MT saldo = 8150MT pagamento
         }
+    },
+    '120363404466236481@g.us': {
+        nome: 'Stock Revendedores VIP',
+        precos: {
+            10240: 130,    // 10GB = 130MT (13MT/GB)
+            20480: 260,    // 20GB = 260MT
+            30720: 390,    // 30GB = 390MT
+            40960: 520,    // 40GB = 520MT
+            51200: 650     // 50GB = 650MT
+        },
+        // === TABELA DE SALDO STOCK REVENDEDORES VIP ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 820    // 1000MT saldo = 820MT pagamento
+        }
     }
     // Only Saldo foi removido pois não precisa de divisão automática
 };
@@ -910,6 +927,44 @@ e o respetivo número beneficiário.
 ⚡ 9000 Saldo ── 7.335 MT
 ⚡ 10000 Saldo ─ 8.150 MT
 📝 *Escolha o pacote e envie o comprovativo*`
+    },
+    '120363404466236481@g.us': {
+        nome: 'Stock Revendedores VIP',
+        precos: {
+            10240: 130,    // 10GB = 130MT (13MT/GB)
+            20480: 260,    // 20GB = 260MT
+            30720: 390,    // 30GB = 390MT
+            40960: 520,    // 40GB = 520MT
+            51200: 650     // 50GB = 650MT
+        },
+        // === TABELA DE SALDO STOCK REVENDEDORES VIP ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 820    // 1000MT saldo = 820MT pagamento
+        },
+        tabela: `🚨🌐 MEGABYTES & ☎️CRÉDITOS
+
+🛜📶 TABELA NORMAL🌐
+♨️ GB's🛜 COMPLETOS🟰13🔥
+🌐 10GB   🎫 130MT💳
+🌐 20GB   🎫 260MT💳
+🌐 30GB   🎫 390MT💳
+🌐 40GB   🎫 520MT💳
+🌐 50GB   🎫 650MT💳`,
+
+        pagamento: `💳 *FORMAS DE PAGAMENTO:*⤵️
+- 📲 *𝗘-𝗠𝗢𝗟𝗔: 877860834*💶💰
+- *Adinan Rafael*
+- 📲 *𝗠-𝗣𝗘𝗦𝗔: 847206431*💷💰
+- ↪️📞📱 *Adinan RafaelHélio*`,
+
+        saldo: ` 📞 RECARGA DA VODACOM 📞
+📲☎️ 50   🎫    45MT💳
+📲☎️ 100   🎫    85MT💳
+📲☎️ 500   🎫    410MT💳
+📲☎️ 1000 🎫    820MT💳`
     }
 };
 

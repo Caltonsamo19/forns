@@ -122,6 +122,23 @@ class WhatsAppBotDivisao {
                     '258865147776', // e-Mola - António F. Zucula (com prefixo)
                     '1234483208'   // MBIM - António F. Zucula
                 ]
+            },
+            '120363404466236481@g.us': {
+                nome: 'Stock Revendedores VIP',
+                precos: {
+                    10240: 130,    // 10GB = 130MT (13MT/GB)
+                    20480: 260,    // 20GB = 260MT
+                    30720: 390,    // 30GB = 390MT
+                    40960: 520,    // 40GB = 520MT
+                    51200: 650     // 50GB = 650MT
+                },
+                // NÚMEROS DE PAGAMENTO DO GRUPO (NUNCA devem receber megas)
+                numerosPagamento: [
+                    '877860834',   // e-Mola - Adinan Rafael
+                    '258877860834', // e-Mola - Adinan Rafael (com prefixo)
+                    '847206431',   // M-Pesa - Adinan RafaelHélio
+                    '258847206431'  // M-Pesa - Adinan RafaelHélio (com prefixo)
+                ]
             }
             // Adicionar outros grupos conforme necessário
         };
