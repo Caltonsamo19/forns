@@ -139,6 +139,30 @@ class WhatsAppBotDivisao {
                     '847206431',   // M-Pesa - Adinan RafaelHélio
                     '258847206431'  // M-Pesa - Adinan RafaelHélio (com prefixo)
                 ]
+            },
+            '120363420585457521@g.us': {
+                nome: 'Só Revendedores',
+                precos: {
+                    10240: 125,    // 10GB = 125MT (12.5MT/GB)
+                    20480: 250,    // 20GB = 250MT
+                    30720: 375,    // 30GB = 375MT
+                    40960: 500,    // 40GB = 500MT
+                    51200: 625,    // 50GB = 625MT
+                    61440: 750,    // 60GB = 750MT
+                    71680: 875,    // 70GB = 875MT
+                    81920: 1000,   // 80GB = 1000MT
+                    92160: 1125,   // 90GB = 1125MT
+                    102400: 1250   // 100GB = 1250MT
+                },
+                // NÚMEROS DE PAGAMENTO DO GRUPO (NUNCA devem receber megas)
+                numerosPagamento: [
+                    '840326152',   // M-Pesa - Camerson Manuel
+                    '258840326152', // M-Pesa - Camerson Manuel (com prefixo)
+                    '875778918',   // e-Mola - Mauro Germano Silva
+                    '258875778918', // e-Mola - Mauro Germano Silva (com prefixo)
+                    '849239158',   // Suporte
+                    '258849239158'  // Suporte (com prefixo)
+                ]
             }
             // Adicionar outros grupos conforme necessário
         };

@@ -393,6 +393,40 @@ const CONFIGURACAO_GRUPOS_DIVISAO = {
             500: 410,    // 500MT saldo = 410MT pagamento
             1000: 820    // 1000MT saldo = 820MT pagamento
         }
+    },
+    '120363420585457521@g.us': {
+        nome: 'Só Revendedores',
+        precos: {
+            10240: 125,    // 10GB = 125MT (12.5MT/GB)
+            20480: 250,    // 20GB = 250MT
+            30720: 375,    // 30GB = 375MT
+            40960: 500,    // 40GB = 500MT
+            51200: 625,    // 50GB = 625MT
+            61440: 750,    // 60GB = 750MT
+            71680: 875,    // 70GB = 875MT
+            81920: 1000,   // 80GB = 1000MT
+            92160: 1125,   // 90GB = 1125MT
+            102400: 1250   // 100GB = 1250MT
+        },
+        // === TABELA DE SALDO SÓ REVENDEDORES ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 815,   // 1000MT saldo = 815MT pagamento
+            2000: 1630,  // 2000MT saldo = 1630MT pagamento
+            3000: 2445,  // 3000MT saldo = 2445MT pagamento
+            4000: 3260,  // 4000MT saldo = 3260MT pagamento
+            5000: 4075,  // 5000MT saldo = 4075MT pagamento
+            6000: 4890,  // 6000MT saldo = 4890MT pagamento
+            7000: 5705,  // 7000MT saldo = 5705MT pagamento
+            8000: 6520,  // 8000MT saldo = 6520MT pagamento
+            9000: 7335,  // 9000MT saldo = 7335MT pagamento
+            10000: 8150  // 10000MT saldo = 8150MT pagamento
+        }
     }
     // Only Saldo foi removido pois não precisa de divisão automática
 };
@@ -959,6 +993,89 @@ e o respetivo número beneficiário.
 📲☎️ 100   🎫    85MT💳
 📲☎️ 500   🎫    410MT💳
 📲☎️ 1000 🎫    820MT💳`
+    },
+    '120363420585457521@g.us': {
+        nome: 'Só Revendedores',
+        precos: {
+            10240: 125,    // 10GB = 125MT (12.5MT/GB)
+            20480: 250,    // 20GB = 250MT
+            30720: 375,    // 30GB = 375MT
+            40960: 500,    // 40GB = 500MT
+            51200: 625,    // 50GB = 625MT
+            61440: 750,    // 60GB = 750MT
+            71680: 875,    // 70GB = 875MT
+            81920: 1000,   // 80GB = 1000MT
+            92160: 1125,   // 90GB = 1125MT
+            102400: 1250   // 100GB = 1250MT
+        },
+        // === TABELA DE SALDO SÓ REVENDEDORES ===
+        precosSaldo: {
+            50: 45,      // 50MT saldo = 45MT pagamento
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 410,    // 500MT saldo = 410MT pagamento
+            1000: 815,   // 1000MT saldo = 815MT pagamento
+            2000: 1630,  // 2000MT saldo = 1630MT pagamento
+            3000: 2445,  // 3000MT saldo = 2445MT pagamento
+            4000: 3260,  // 4000MT saldo = 3260MT pagamento
+            5000: 4075,  // 5000MT saldo = 4075MT pagamento
+            6000: 4890,  // 6000MT saldo = 4890MT pagamento
+            7000: 5705,  // 7000MT saldo = 5705MT pagamento
+            8000: 6520,  // 8000MT saldo = 6520MT pagamento
+            9000: 7335,  // 9000MT saldo = 7335MT pagamento
+            10000: 8150  // 10000MT saldo = 8150MT pagamento
+        },
+        tabela: `🤖 *BOT SEGURO*
+📊 *VALORES DISPONÍVEIS:*
+
+🎯 *10 GB*    ──── 125 MT
+🎯 *20 GB*    ──── 250 MT
+🎯 *30 GB*    ──── 375 MT
+🎯 *40 GB*    ──── 500 MT
+🎯 *50 GB*    ──── 625 MT
+🎯 *60 GB*    ──── 750 MT
+🎯 *70 GB*    ──── 875 MT
+🎯 *80 GB*    ──── 1.000 MT
+🎯 *90 GB*   ──── 1.125 MT
+🎯 *100 GB*   ──── 1.250 MT`,
+
+        pagamento: `💳 *PAGAMENTOS*
+
+📱 M-PESA
+└─ Camerson Manuel
+└─ 840326152
+📱 E-MOLA
+└─ Mauro Germano Silva
+└─ 875778918
+
+📞 *SUPORTE:* 849239158`,
+
+        saldo: `🚨✅🔥 SALDO PROMO🔥✅🚨
+✅1000 Saldo  = 815MT
+
+📶 50   = 45MT 💰
+📶 100  = 85MT 💰
+📶 200  = 170MT 💰
+📶 300  = 255MT 💰
+📶 400  = 340MT 💰
+📶 500  = 410MT 💰
+📶 1000 = 815MT 💰
+📶 2000 = 1630MT 💰
+📶 3000 = 2445MT 💰
+📶 4000 = 3260MT 💰
+📶 5000 = 4075MT 💰
+📶 6000 = 4890MT 💰
+📶 7000 = 5705MT 💰
+📶 8000 = 6520MT 💰
+📶 9000 = 7335MT 💰
+📶 10000 = 8150MT 💰
+
+📩 Após o envio do valor, envie o comprovativo no grupo
+e o respetivo número beneficiário.
+
+⚡ Aproveitem! ⚡`
     }
 };
 
