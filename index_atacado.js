@@ -1027,19 +1027,21 @@ e o respetivo número beneficiário.
             9000: 7335,  // 9000MT saldo = 7335MT pagamento
             10000: 8150  // 10000MT saldo = 8150MT pagamento
         },
-        tabela: `🤖 *BOT SEGURO*
-📊 *VALORES DISPONÍVEIS:*
+        tabela: `🚨📢🔥 PROMOÇÃO GIGABYTES COMPLETOS 🔥📢🚨
+✅ Apenas para clientes Vodacom
 
-🎯 *10 GB*    ──── 125 MT
-🎯 *20 GB*    ──── 250 MT
-🎯 *30 GB*    ──── 375 MT
-🎯 *40 GB*    ──── 500 MT
-🎯 *50 GB*    ──── 625 MT
-🎯 *60 GB*    ──── 750 MT
-🎯 *70 GB*    ──── 875 MT
-🎯 *80 GB*    ──── 1.000 MT
-🎯 *90 GB*   ──── 1.125 MT
-🎯 *100 GB*   ──── 1.250 MT`,
+🛜 10GB = 125MT 💰
+🛜 20GB = 250MT 💰
+🛜 30GB = 375MT 💰
+🛜 40GB = 500MT 💰
+🛜 50GB = 625MT 💰
+🛜 60GB = 750MT 💰
+🛜 70GB = 875MT 💰
+🛜 80GB = 1000MT 💰
+🛜 90GB = 1125MT 💰
+🛜 100GB = 1250MT 💰
+
+⚡ Aproveita já e garante o teu pacote antes do fim da promoção! ⚡`,
 
         pagamento: `💳 *PAGAMENTOS*
 
