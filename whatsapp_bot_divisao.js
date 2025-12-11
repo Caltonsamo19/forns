@@ -161,6 +161,28 @@ class WhatsAppBotDivisao {
                     '875778918',   // e-Mola - Mauro Germano Silva
                     '258875778918'  // e-Mola - Mauro Germano Silva (com prefixo)
                 ]
+            },
+            '120363371476963939@g.us': {
+                nome: 'DATA STORE REVENDEDORES MEGAS ATENDIMENTO AUTOMÁTICA📈',
+                precos: {
+                    10240: 130,    // 10GB = 130MT (13MT/GB)
+                    20480: 260,    // 20GB = 260MT
+                    30720: 390,    // 30GB = 390MT
+                    40960: 520,    // 40GB = 520MT
+                    51200: 650,    // 50GB = 650MT
+                    61440: 780,    // 60GB = 780MT (13MT/GB)
+                    71680: 910,    // 70GB = 910MT
+                    81920: 1040,   // 80GB = 1040MT
+                    92160: 1170,   // 90GB = 1170MT
+                    102400: 1300   // 100GB = 1300MT
+                },
+                // NÚMEROS DE PAGAMENTO DO GRUPO (NUNCA devem receber megas)
+                numerosPagamento: [
+                    '849507572',   // M-Pesa - Ema Joaquina Mata
+                    '258849507572', // M-Pesa - Ema Joaquina Mata (com prefixo)
+                    '869045975',   // e-Mola/P24 - Ema Joaquina Mata
+                    '258869045975'  // e-Mola/P24 - Ema Joaquina Mata (com prefixo)
+                ]
             }
             // Adicionar outros grupos conforme necessário
         };

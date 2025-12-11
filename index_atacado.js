@@ -427,6 +427,35 @@ const CONFIGURACAO_GRUPOS_DIVISAO = {
             9000: 7335,  // 9000MT saldo = 7335MT pagamento
             10000: 8150  // 10000MT saldo = 8150MT pagamento
         }
+    },
+    '120363371476963939@g.us': {
+        nome: 'DATA STORE REVENDEDORES MEGAS ATENDIMENTO AUTOMÁTICA📈',
+        precos: {
+            10240: 130,    // 10GB = 130MT (13MT/GB)
+            20480: 260,    // 20GB = 260MT
+            30720: 390,    // 30GB = 390MT
+            40960: 520,    // 40GB = 520MT
+            51200: 650,    // 50GB = 650MT
+            61440: 780,    // 60GB = 780MT (13MT/GB)
+            71680: 910,    // 70GB = 910MT
+            81920: 1040,   // 80GB = 1040MT
+            92160: 1170,   // 90GB = 1170MT
+            102400: 1300   // 100GB = 1300MT
+        },
+        // === TABELA DE SALDO DATA STORE REVENDEDORES ===
+        precosSaldo: {
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 405,    // 500MT saldo = 405MT pagamento
+            1000: 810,   // 1000MT saldo = 810MT pagamento
+            2000: 1620,  // 2000MT saldo = 1620MT pagamento
+            3000: 2430,  // 3000MT saldo = 2430MT pagamento
+            4000: 3240,  // 4000MT saldo = 3240MT pagamento
+            5000: 4050,  // 5000MT saldo = 4050MT pagamento
+            6000: 4860   // 6000MT saldo = 4860MT pagamento
+        }
     }
     // Only Saldo foi removido pois não precisa de divisão automática
 };
@@ -1078,6 +1107,78 @@ e o respetivo número beneficiário.
 e o respetivo número beneficiário.
 
 ⚡ Aproveitem! ⚡`
+    },
+    '120363371476963939@g.us': {
+        nome: 'DATA STORE REVENDEDORES MEGAS ATENDIMENTO AUTOMÁTICA📈',
+        precos: {
+            10240: 130,    // 10GB = 130MT (13MT/GB)
+            20480: 260,    // 20GB = 260MT
+            30720: 390,    // 30GB = 390MT
+            40960: 520,    // 40GB = 520MT
+            51200: 650,    // 50GB = 650MT
+            61440: 780,    // 60GB = 780MT (13MT/GB)
+            71680: 910,    // 70GB = 910MT
+            81920: 1040,   // 80GB = 1040MT
+            92160: 1170,   // 90GB = 1170MT
+            102400: 1300   // 100GB = 1300MT
+        },
+        // === TABELA DE SALDO DATA STORE REVENDEDORES ===
+        precosSaldo: {
+            100: 85,     // 100MT saldo = 85MT pagamento
+            200: 170,    // 200MT saldo = 170MT pagamento
+            300: 255,    // 300MT saldo = 255MT pagamento
+            400: 340,    // 400MT saldo = 340MT pagamento
+            500: 405,    // 500MT saldo = 405MT pagamento
+            1000: 810,   // 1000MT saldo = 810MT pagamento
+            2000: 1620,  // 2000MT saldo = 1620MT pagamento
+            3000: 2430,  // 3000MT saldo = 2430MT pagamento
+            4000: 3240,  // 4000MT saldo = 3240MT pagamento
+            5000: 4050,  // 5000MT saldo = 4050MT pagamento
+            6000: 4860   // 6000MT saldo = 4860MT pagamento
+        },
+        tabela: `*Tabela de Revenda de Megabytes a melhor preço do mercado🔥*
+
+🚨📢 GIGABYTES COMPLETOS 🔥📢🚨
+
+10GB - 130mzn
+20GB - 260mzn
+30GB - 390mzn
+40GB - 520mzn
+50GB - 650mzn
+
+60GB - 780mzn
+70GB - 910mzn
+80GB - 1040mzn
+90GB - 1170mzn
+100GB - 1300mzn
+
+*Entrega Rápido e seguro✅📦*`,
+
+        pagamento: `Formas de pagamento atualizadas
+Mpesa e Emola atualizadas⚠️
+
+849507572 Ema Joaquina Mata- Mpesa✅
+
+869045975 Ema Joaquina Mata- Emola ou P24 (conta móvel).✅
+
+Peço screenshot, assim que enviar o valor.✅`,
+
+        saldo: `*Tabela de Revenda de Saldo Vodacom a melhor preço do mercado🔥*
+
+100 - 85mzn
+200 - 170mzn
+300 - 255mzn
+400 - 340mzn
+500 - 405mzn
+
+1000 - 810mzn
+2000 - 1620mzn
+3000 - 2430mzn
+4000 - 3240mzn
+5000 - 4050mzn
+6000 - 4860mzn
+
+*Entrega Rápido e seguro✅📦*`
     }
 };
 
