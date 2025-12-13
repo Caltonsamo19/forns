@@ -1076,10 +1076,10 @@ e o respetivo número beneficiário.
 
 📱 M-PESA
 └─ Camerson Manuel
-└─ 849239158
+└─ 855491880
 📱 E-MOLA
-└─ Mauro Germano Silva
-└─ 875778918
+└─Camerson Manuel
+└─ 871712476
 
 📞 *SUPORTE:* 849239158`,
 
